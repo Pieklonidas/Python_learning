@@ -1,35 +1,40 @@
-import random
+from mpl_toolkits.basemap import Basemap
 import matplotlib.pyplot as plt
 
-fig = plt.figure()
+m = Basemap(projection='mill',
+            llcrnrlat=25,
+            llcrnrlon=-130,
+            urcrnrlat=50,
+            urcrnrlon=-60,
+            resolution='l')
 
-def create_plots():
-    xs = []
-    ys = []
-    for i in range(10):
-        x = i
-        y = random.randrange(10)
-        xs.append(x)
-        ys.append(y)
-    return xs, ys
+m.drawcoastlines()
+m.drawcountries(linewidth=2)
+m.drawstates(color='b')
 
+xs = []
+ys = []
 
-ax1 = plt.subplot2grid((6, 1), (0, 0), rowspan=1, colspan=1)
-ax2 = plt.subplot2grid((6, 1), (1, 0), rowspan=4, colspan=1)
-ax3 = plt.subplot2grid((6, 1), (5, 0), rowspan=1, colspan=1)
+NYClat, NYClon = 40.7127, -74.0059
 
-# # add subplot syntax:
-# ax1 = fig.add_subplot(2, 2, 1)
-# ax2 = fig.add_subplot(2, 2, 2)
-# ax3 = fig.add_subplot(2, 1, 2)
+xpt, ypt = m(NYClon, NYClat)
+xs.append(xpt)
+ys.append(ypt)
 
-x, y = create_plots()
-ax1.plot(x, y)
+m.plot(xpt, ypt, 'c*', markersize=15)
 
-x, y = create_plots()
-ax2.plot(x, y)
+LAlat, LAlon = 34.05, -118.25
 
-x, y = create_plots()
-ax3.plot(x, y)
+xpt, ypt = m(LAlon, LAlat)
+xs.append(xpt)
+ys.append(ypt)
 
+m.plot(xpt, ypt, 'g^', markersize=15)
+
+m.plot(xs, ys, linewidth=3, color='r', label='Flight 98')
+m.drawgreatcircle(NYClon, NYClat, LAlon, LAlat, color='c', linewidth=3, label='arc')
+
+plt.legend(loc=4)
+
+plt.title('Basemap tutorial')
 plt.show()
