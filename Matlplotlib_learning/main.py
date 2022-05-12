@@ -1,40 +1,20 @@
-from mpl_toolkits.basemap import Basemap
+from mpl_toolkits.mplot3d import axes3d
 import matplotlib.pyplot as plt
+import numpy as np
+from matplotlib import style
+style.use('fivethirtyeight')
 
-m = Basemap(projection='mill',
-            llcrnrlat=25,
-            llcrnrlon=-130,
-            urcrnrlat=50,
-            urcrnrlon=-60,
-            resolution='l')
+fig = plt.figure()
 
-m.drawcoastlines()
-m.drawcountries(linewidth=2)
-m.drawstates(color='b')
+ax1 = fig.add_subplot(111, projection='3d')
 
-xs = []
-ys = []
+x, y, z = axes3d.get_test_data()
 
-NYClat, NYClon = 40.7127, -74.0059
+# print(axes3d.__file__)
+ax1.plot_wireframe(x, y, z, rstride=5, cstride=5)
 
-xpt, ypt = m(NYClon, NYClat)
-xs.append(xpt)
-ys.append(ypt)
+ax1.set_xlabel('x axis')
+ax1.set_ylabel('y axis')
+ax1.set_zlabel('z axis')
 
-m.plot(xpt, ypt, 'c*', markersize=15)
-
-LAlat, LAlon = 34.05, -118.25
-
-xpt, ypt = m(LAlon, LAlat)
-xs.append(xpt)
-ys.append(ypt)
-
-m.plot(xpt, ypt, 'g^', markersize=15)
-
-m.plot(xs, ys, linewidth=3, color='r', label='Flight 98')
-m.drawgreatcircle(NYClon, NYClat, LAlon, LAlat, color='c', linewidth=3, label='arc')
-
-plt.legend(loc=4)
-
-plt.title('Basemap tutorial')
 plt.show()
