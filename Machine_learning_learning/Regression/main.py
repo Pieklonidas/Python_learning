@@ -7,6 +7,7 @@ from sklearn import preprocessing, model_selection, svm
 from sklearn.linear_model import LinearRegression
 import matplotlib.pyplot as plt
 from matplotlib import style
+import pickle
 
 style.use('ggplot')
 
@@ -41,12 +42,18 @@ y = np.array(df['label'])
 
 X_train, X_test, y_train, y_test = model_selection.train_test_split(X, y, test_size=0.2)
 
-clf = LinearRegression(n_jobs=10)  # 98%
-# clf = svm.SVR(kernel='poly')  # 79% | poly - 68%
-clf.fit(X_train, y_train)
+# clf = LinearRegression()  # 98% | n_jobs - use threads
+# # clf = svm.SVR(kernel='poly')  # 79% | poly - 68%
+# clf.fit(X_train, y_train)
+# with open('linearregression.pickle', 'wb') as f:
+#     pickle.dump(clf, f)
+
+pickle_in = open('linearregression.pickle', 'rb')
+clf = pickle.load(pickle_in)
+
 accuracy = clf.score(X_test, y_test)
 
-# print(accuracy)
+print(accuracy)
 
 forecast_set = clf.predict(X_Lately)
 
@@ -64,7 +71,7 @@ for i in forecast_set:
     next_unix += one_day
     df.loc[next_date] = [np.nan for _ in range(len(df.columns) - 1)] + [i]
 
-print(df.tail())
+# print(df.tail())
 
 df['Adj. Close'].plot()
 df['Forecast'].plot()
